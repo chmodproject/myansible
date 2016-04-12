@@ -3,12 +3,12 @@
   remote_user: markbame
   sudo: yes
   roles:
-     #- markbame
-     #- hhvm
-     #- mariadb
-     #- memcached
-     #- nginx
-     #- deployment
+     - markbame
+     - hhvm
+     - mariadb
+     - memcached
+     - nginx
+     - deployment
      - nodejs
   vars:
     mysql_root_password: red10210
