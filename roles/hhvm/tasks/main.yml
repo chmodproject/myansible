@@ -1,0 +1,36 @@
+
+---
+- name: Enable HHVM repo key
+  run_once: false
+  apt_key: url=http://dl.hhvm.com/conf/hhvm.gpg.key state=present
+
+- name: Enable HHVM repo
+  run_once: false
+  apt_repository: repo="deb http://dl.hhvm.com/ubuntu {{ ansible_lsb.codename }} main" state=present
+
+- name: Install HHVM
+  run_once: false
+  apt: name=hhvm state=present
+
+- name: Do /etc/hhvm/server.ini
+  run_once: false
+  template: src=etc/hhvm/server.ini dest=/etc/hhvm/server.ini owner=root group=root mode=0644
+  notify: hhvm restart
+
+- name: Do /etc/hhvm/php.ini
+  run_once: false
+  template: src=etc/hhvm/php.ini dest=/etc/hhvm/php.ini owner=root group=root mode=0644
+  notify: hhvm restart
+
+- name: Ensure HHVM is running
+  run_once: false
+  service: name=hhvm state=started enabled=yes
+  
+- name: check hhvm path
+  shell: which hhvm
+  register: current_hhvm
+  ignore_errors: True
+
+
+- name: symlink hhvm as php
+  file: src="{{ current_hhvm.stdout }}" dest=/usr/bin/php state=link

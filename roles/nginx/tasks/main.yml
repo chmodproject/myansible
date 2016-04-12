@@ -1,0 +1,30 @@
+---
+# - name: Install nginx
+#   run_once: false
+#   apt: name=nginx state=present state=installed update_cache=true
+#   notify:
+#     - nginx restart
+
+# - name: Configure sites-available
+#   run_once: false
+#   template: src=etc/nginx/nginx.conf dest=/etc/nginx/sites-available/default owner=root group=root mode=0644
+#   notify:
+#     - nginx restart
+
+- name: Do nginx upstream.conf
+  run_once: false
+  template: src=etc/nginx/upstream.conf dest=/etc/nginx/conf.d/upstream.conf owner=root group=root mode=0644
+  notify: 
+    - nginx restart
+
+- name: Do nginx hhvm.conf
+  run_once: false
+  template: src=etc/nginx/hhvm.conf dest=/etc/nginx/hhvm.conf owner=root group=root mode=0644
+  notify: 
+    - nginx restart
+
+
+
+# - name: Set up path
+#   run_once: false
+#   file: path=/usr/share/nginx/laravel/public state=directory owner={{ web_user }} group={{ web_group }} mode=0775

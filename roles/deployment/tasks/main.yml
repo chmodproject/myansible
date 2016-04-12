@@ -1,0 +1,26 @@
+---
+- name: Create /var/www/.ssh/ directory
+  sudo: yes
+  file: dest=~/.ssh/ state=directory owner=www-data group=www-data mode=0700
+
+- name: Copy private ssh key
+  sudo: yes
+  copy: src=~/.ssh/id_rsa.pub dest=~/.ssh/id_rsa.pub owner=www-data group=www-data mode=0600
+
+- name: install phpunit
+  get_url: url=https://phar.phpunit.de/phpunit.phar dest=/usr/local/bin/phpunit mode=555
+
+
+
+# - name: Pull sources from the repository.
+#  # file: path=/usr/share/nginx owner=www-data group=www-data mode=775
+#   sudo: yes
+#   git: 
+#     repo: git@bitbucket.org:blue10210/abenyu-project.git 
+#     dest: /usr/share/nginx/
+#     only_if: "$vm == 0" 
+#     version: master
+#     accept_hostkey: yes
+#     key_file: ~/.ssh/id_rsa.pub
+#     clone: yes
+#     force: yes

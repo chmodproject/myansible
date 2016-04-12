@@ -1,0 +1,28 @@
+---
+- name: Add the Nodesource apt key
+  apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key state=present
+ 
+- name: Add nodesource repository
+  apt_repository: repo='deb https://deb.nodesource.com/node_0.10 trusty main' state=present
+ 
+- name: Install nodejs and some dependencies
+  apt: name={{ item }} update_cache=yes state=present
+  with_items:
+      - nodejs
+      - build-essential
+
+- name: npm global install
+  npm: global=yes name={{item}}
+  with_items:
+    - coffee-script
+    - node-sass
+    - grunt-cli
+    - grunt
+    - bower
+    - gulp  
+
+- name: npm update to latest
+  command: sudo npm -g install npm@latest
+
+- name: npm install
+  command: cd /usr/share/nginx/laravel | sudo npm install

@@ -1,0 +1,21 @@
+---
+- hosts: all
+  remote_user: vagrant
+  become: yes
+  become_method: sudo
+  vars:
+    NORMAL_USER_NAME: 'markbame'
+  tasks:
+  - name: "Create a secondary, non-root user"
+    user: name={{ NORMAL_USER_NAME }} 
+          password='$6$rounds=656000$WByDpEtsyTufMYcd$1AF0WVsVRzqbeDA1eOP0AcV6BVdvlWO24oIonILIKD0Ek0B4Sf/NSu/vxpjATXwOPJbxUl.JXvHrRBM7o9X0t1' 
+          shell=/bin/bash
+        
+  - name: Add remote authorized key to allow future passwordless logins
+    authorized_key: user={{ NORMAL_USER_NAME }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+  - name: Add normal user to sudoers
+    lineinfile: dest=/etc/sudoers
+                regexp="{{ NORMAL_USER_NAME }} ALL"
+                line="{{ NORMAL_USER_NAME }} ALL=(ALL) NOPASSWD:ALL"
+                state=present 
